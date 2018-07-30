@@ -1,23 +1,17 @@
 class Solution:
-
-    def maxProduct(self, nums):
-        if nums == []:
+    def rob(self, nums):
+        if len(nums) == 0:
             return 0
-        min_res = 1
-        max_res = 1
-        res = [1] * len(nums)
-        for i, n in enumerate(nums):
-            if n == 0:
-                min_res = 1
-                max_res = 1
-                res[i] = 0
-            else:
-                tmp = [n * max_res, n * min_res, n]
-                max_res = max(tmp)
-                min_res = min(tmp)
-                res[i] = max_res
-        return max(res)
+        if len(nums) == 1:
+            return nums[0]
+        res1 = [0] * len(nums)
+        for i, n in enumerate(nums[1:]):
+            res1[i] = max(res1[i - 2] + n, res1[i - 1])
+        res2 = [0] * len(nums)
+        for i, n in enumerate(nums[:-1]):
+            res2[i] = max(res2[i - 2] + n, res2[i - 1])
+        return max(max(res1), max(res2))
 
 
 s = Solution()
-print(s.maxProduct([-3, -4, -5]))
+print(s.rob([1, 2, 3]))
