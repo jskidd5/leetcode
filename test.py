@@ -1,17 +1,20 @@
 class Solution:
-    def rob(self, nums):
-        if len(nums) == 0:
+    def maxProfit(self, prices):
+        if len(prices) <= 1:
             return 0
-        if len(nums) == 1:
-            return nums[0]
-        res1 = [0] * len(nums)
-        for i, n in enumerate(nums[1:]):
-            res1[i] = max(res1[i - 2] + n, res1[i - 1])
-        res2 = [0] * len(nums)
-        for i, n in enumerate(nums[:-1]):
-            res2[i] = max(res2[i - 2] + n, res2[i - 1])
-        return max(max(res1), max(res2))
+        s1 = [0] * len(prices)
+        s2 = [0] * len(prices)
+        s3 = [0] * len(prices)
+        s1[0] = 0 - prices[0]
+        for i in range(1, len(prices)):
+            s1[i] = max(s1[i - 1], s3[i - 1] - prices[i])
+            s2[i] = s1[i - 1] + prices[i]
+            s3[i] = max(s3[i - 1], s2[i - 1])
+        print(s1)
+        print(s2)
+        print(s3)
+        return max(max(s2), max(s3))
 
 
 s = Solution()
-print(s.rob([1, 2, 3]))
+print(s.maxProfit([4, 2, 7, 1, 11]))
