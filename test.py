@@ -1,20 +1,21 @@
 class Solution:
-    def maxProfit(self, prices):
-        if len(prices) <= 1:
-            return 0
-        s1 = [0] * len(prices)
-        s2 = [0] * len(prices)
-        s3 = [0] * len(prices)
-        s1[0] = 0 - prices[0]
-        for i in range(1, len(prices)):
-            s1[i] = max(s1[i - 1], s3[i - 1] - prices[i])
-            s2[i] = s1[i - 1] + prices[i]
-            s3[i] = max(s3[i - 1], s2[i - 1])
-        print(s1)
-        print(s2)
-        print(s3)
-        return max(max(s2), max(s3))
+    def largestDivisibleSubset(self, nums):
+        if len(nums) == 0:
+            return []
+        nums.sort()
+        dp = [1] * len(nums)
+        res = []
+        for i in range(len(nums)):
+            res.append([])
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[i] % nums[j] == 0:
+                    if dp[j] + 1 > dp[i]:
+                        res[i].append(nums[j])
+                    dp[i] = max(dp[j] + 1, dp[i])
+            res[i].append(nums[i])
+        return res
 
 
 s = Solution()
-print(s.maxProfit([4, 2, 7, 1, 11]))
+print(s.largestDivisibleSubset([1, 2, 3, 4, 6, 24]))
