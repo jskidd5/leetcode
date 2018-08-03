@@ -1,56 +1,24 @@
 class Solution:
-    def longestPalindrome(self, s):
+    def uniquePaths(self, m, n):
         """
-        :type s: str
-        :rtype: str
+        :type m: int
+        :type n: int
+        :rtype: int
         """
-        if len(s) == 0:
-            return ''
-        dp = [1]
-        res = [s[0]]
-        for i in range(1, len(s)):
-            dp.append(1)
-            res.append(s[i])
-            left = i - 1
-            right = i + 1
-            if left >= 0 and s[i] == s[left]:
-                dp[i] += 1
-                res[i] = s[left] + res[i]
-                left -= 1
-            elif right < len(s) and s[i] == s[right]:
-                dp[i] += 1
-                res[i] = res[i] + s[right]
-                right += 1
-            while left >= 0 and right < len(s):
-                if s[left] == s[right]:
-                    dp[i] += 2
-                    res[i] = s[left] + res[i] + s[right]
-                else:
-                    break
-                left -= 1
-                right += 1
-        r1 = res[dp.index(max(dp))]
-        dp = [1]
-        res = [s[0]]
-        for i in range(1, len(s)):
-            dp.append(1)
-            res.append(s[i])
-            left = i - 1
-            right = i + 1
-            while left >= 0 and right < len(s):
-                if s[left] == s[right]:
-                    dp[i] += 2
-                    res[i] = s[left] + res[i] + s[right]
-                else:
-                    break
-                left -= 1
-                right += 1
-        r2 = res[dp.index(max(dp))]
-        if len(r1) > len(r2):
-            return r1
-        else:
-            return r2
+        if m == 0 or n == 0:
+            return 0
+        dp = []
+        for i in range(m):
+            dp.append(n * [0])
+        dp[0][0] = 1
+        for i in range(m):
+            for j in range(n):
+                if i - 1 >= 0:
+                    dp[i][j] += dp[i - 1][j]
+                if j - 1 >= 0:
+                    dp[i][j] += dp[i][j - 1]
+        return dp[m - 1][n - 1]
 
 
 s = Solution()
-print(s.longestPalindrome('aaaa'))
+print(s.uniquePaths(1,0))
