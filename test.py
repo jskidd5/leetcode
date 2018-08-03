@@ -1,21 +1,56 @@
 class Solution:
-    def largestDivisibleSubset(self, nums):
-        if len(nums) == 0:
-            return []
-        nums.sort()
-        dp = [1] * len(nums)
-        res = []
-        for i in range(len(nums)):
-            res.append([])
-        for i in range(len(nums)):
-            for j in range(i):
-                if nums[i] % nums[j] == 0:
-                    if dp[j] + 1 > dp[i]:
-                        res[i].append(nums[j])
-                    dp[i] = max(dp[j] + 1, dp[i])
-            res[i].append(nums[i])
-        return res
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if len(s) == 0:
+            return ''
+        dp = [1]
+        res = [s[0]]
+        for i in range(1, len(s)):
+            dp.append(1)
+            res.append(s[i])
+            left = i - 1
+            right = i + 1
+            if left >= 0 and s[i] == s[left]:
+                dp[i] += 1
+                res[i] = s[left] + res[i]
+                left -= 1
+            elif right < len(s) and s[i] == s[right]:
+                dp[i] += 1
+                res[i] = res[i] + s[right]
+                right += 1
+            while left >= 0 and right < len(s):
+                if s[left] == s[right]:
+                    dp[i] += 2
+                    res[i] = s[left] + res[i] + s[right]
+                else:
+                    break
+                left -= 1
+                right += 1
+        r1 = res[dp.index(max(dp))]
+        dp = [1]
+        res = [s[0]]
+        for i in range(1, len(s)):
+            dp.append(1)
+            res.append(s[i])
+            left = i - 1
+            right = i + 1
+            while left >= 0 and right < len(s):
+                if s[left] == s[right]:
+                    dp[i] += 2
+                    res[i] = s[left] + res[i] + s[right]
+                else:
+                    break
+                left -= 1
+                right += 1
+        r2 = res[dp.index(max(dp))]
+        if len(r1) > len(r2):
+            return r1
+        else:
+            return r2
 
 
 s = Solution()
-print(s.largestDivisibleSubset([1, 2, 3, 4, 6, 24]))
+print(s.longestPalindrome('aaaa'))
