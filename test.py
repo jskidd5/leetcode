@@ -1,23 +1,35 @@
 class Solution:
-    def wordBreak(self, s, wordDict):
+    def maximalSquare(self, matrix):
         """
-        :type s: str
-        :type wordDict: List[str]
-        :rtype: bool
+        :type matrix: List[List[str]]
+        :rtype: int
         """
-        len_s = len(s)
-        dp = [0] * (len_s + 1)
-        dp[0] = 1
-        for i in range(1, len_s + 1):
-            for w in wordDict:
-                print(s[i - len(w):i])
-                if len(w) <= i and w == s[i - len(w):i] and dp[i - len(w)] == 1:
-                    dp[i] = 1
-        if dp[-1] == 1:
-            return True
-        else:
-            return False
+        len_row = len(matrix)
+        if len_row <= 0:
+            return 0
+        len_col = len(matrix[0])
+        dp = []
+        for i in range(len_row):
+            dp.append([0] * len_col)
+        for i in range(len_col):
+            if matrix[0][i] == '1':
+                dp[0][i] = 1
+        for i in range(len_row):
+            if matrix[i][0] == '1':
+                dp[i][0] = 1
+        for i in range(1, len_row):
+            for j in range(1, len_col):
+                if dp[i - 1][j] > 0 and dp[i][j - 1] > 0 and dp[i - 1][j - 1] > 0 and int(matrix[i][j]) == 1:
+                    dp[i][j] = min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1
+                else:
+                    dp[i][j] = int(matrix[i][j])
+        res = []
+        for i in dp:
+            res.append(max(i))
+        l = max(res)
+        return dp
 
 
 s = Solution()
-print(s.wordBreak("catsandog", ["cats", "dog", "sand", "and", "cat"]))
+print(s.maximalSquare(
+    [["0", "0", "0", "1"], ["1", "1", "0", "1"], ["1", "1", "1", "1"], ["0", "1", "1", "1"], ["0", "1", "1", "1"]]))
