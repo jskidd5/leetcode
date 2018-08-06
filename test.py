@@ -1,34 +1,23 @@
-from itertools import combinations
-
-
 class Solution:
-    def numDecodings(self, s):
+    def wordBreak(self, s, wordDict):
         """
         :type s: str
-        :rtype: int
+        :type wordDict: List[str]
+        :rtype: bool
         """
         len_s = len(s)
-        dp = [0] * len_s
-        if len_s <= 0:
-            return 0
-        if s[0] == '0':
-            return 0
-        if len_s <= 1:
-            return 1
+        dp = [0] * (len_s + 1)
         dp[0] = 1
-        if s[1] != '0':
-            dp[1] += 1
-        if int(s[0:2]) <= 26:
-            dp[1] += 1
-        for i in range(2, len_s):
-            if s[i] != '0':
-                dp[i] += dp[i - 1]
-            if 1 <= int(s[i - 1:i + 1]) <= 26 and s[i - 1] != '0':
-                dp[i] += dp[i - 2]
-            if dp[i] == 0:
-                return 0
-        return dp[-1]
+        for i in range(1, len_s + 1):
+            for w in wordDict:
+                print(s[i - len(w):i])
+                if len(w) <= i and w == s[i - len(w):i] and dp[i - len(w)] == 1:
+                    dp[i] = 1
+        if dp[-1] == 1:
+            return True
+        else:
+            return False
 
 
 s = Solution()
-print(s.numDecodings('101'))
+print(s.wordBreak("catsandog", ["cats", "dog", "sand", "and", "cat"]))
