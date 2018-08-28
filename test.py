@@ -1,23 +1,21 @@
 class Solution:
-    def longestPalindromeSubseq(self, s):
+    def findSubstringInWraproundString(self, p):
         """
-        :type s: str
+        :type p: str
         :rtype: int
         """
-        len_s = len(s)
-        dp = []
-        for i in range(len_s):
-            dp.append([0] * len_s)
-        for i in range(len_s):
-            dp[i][i] = 1
-            for j in range(i - 1, -1, -1):
-                if s[j] == s[i]:
-                    dp[i][j] = dp[i - 1][j + 1] + 2
-                else:
-                    dp[i][j] = max(dp[i][j + 1], dp[i - 1][j])
-
-        return dp
+        len_p = len(p)
+        dp = [0] * 26
+        dp[ord(p[len_p - 1]) - 97] = 1
+        cnt = 1
+        for i in range(len_p - 2, -1, -1):
+            if ord(p[i + 1]) - ord(p[i]) == 1 or ord(p[i + 1]) - ord(p[i]) == -25:
+                cnt += 1
+            else:
+                cnt = 1
+            dp[ord(p[i]) - 97] = max(cnt, dp[ord(p[i]) - 97])
+        return sum(dp)
 
 
 s = Solution()
-print(s.longestPalindromeSubseq('bawbaob'))
+print(s.findSubstringInWraproundString('zab'))
