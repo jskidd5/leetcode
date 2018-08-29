@@ -1,21 +1,30 @@
 class Solution:
-    def findSubstringInWraproundString(self, p):
+    def countSubstrings(self, s):
         """
-        :type p: str
+        :type s: str
         :rtype: int
         """
-        len_p = len(p)
-        dp = [0] * 26
-        dp[ord(p[len_p - 1]) - 97] = 1
-        cnt = 1
-        for i in range(len_p - 2, -1, -1):
-            if ord(p[i + 1]) - ord(p[i]) == 1 or ord(p[i + 1]) - ord(p[i]) == -25:
+        len_s = len(s)
+        dp = [1] * len_s
+        res = 0
+        for i in range(len_s):
+            res += 1
+            cnt = 1
+            while i - cnt + 1 >= 0 and i + cnt < len_s:
+                if s[i - cnt + 1] == s[i + cnt]:
+                    res += 1
+                else:
+                    break
                 cnt += 1
-            else:
-                cnt = 1
-            dp[ord(p[i]) - 97] = max(cnt, dp[ord(p[i]) - 97])
-        return sum(dp)
+            cnt = 1
+            while i - cnt >= 0 and i + cnt < len_s:
+                if s[i - cnt] == s[i + cnt]:
+                    res += 1
+                else:
+                    break
+                cnt += 1
+        return res
 
 
 s = Solution()
-print(s.findSubstringInWraproundString('zab'))
+print(s.countSubstrings('aaa'))
