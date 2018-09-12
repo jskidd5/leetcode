@@ -1,29 +1,30 @@
 class Solution:
-    def findNumberOfLIS(self, nums):
+    def minimumDeleteSum(self, s1, s2):
         """
-        :type nums: List[int]
+        :type s1: str
+        :type s2: str
         :rtype: int
         """
-        res_cnt = 0
-        len_n = len(nums)
-        if len_n == 0:
-            return 0
-        dp = [1] * len_n
-        res = [1] * len_n
-        for i in range(1, len_n):
-            for j in range(i - 1, -1, -1):
-                if nums[i] > nums[j]:
-                    if dp[j] + 1 > dp[i]:
-                        res[i] = res[j]
-                    elif dp[j] + 1 == dp[i]:
-                        res[i] += res[j]
-                    dp[i] = max(dp[j] + 1, dp[i])
-        max_cnt = max(dp)
-        for i in range(len_n):
-            if dp[i] == max_cnt:
-                res_cnt += res[i]
-        return dp, res, res_cnt
+        len_s1 = len(s1)
+        len_s2 = len(s2)
+        dp = []
+        for i in range(len_s1 + 1):
+            dp.append([0] * (len_s2 + 1))
+        for i in range(1, len_s1 + 1):
+            dp[i][0] = dp[i - 1][0] + ord(s1[i - 1])
+        for i in range(1, len_s2 + 1):
+            dp[0][i] = dp[0][i - 1] + ord(s2[i - 1])
+        for i in range(1, len_s1 + 1):
+            for j in range(1, len_s2 + 1):
+                if s1[i - 1] == s2[j - 1]:
+                    tmp = 0
+                else:
+                    tmp = ord(s1[i - 1]) + ord(s2[j - 1])
+                dp[i][j] = min(dp[i - 1][j - 1] + tmp, dp[i - 1][j] + ord(s1[i - 1]), dp[i][j - 1] + ord(s2[j - 1]))
+        return dp[-1][-1]
 
 
 s = Solution()
-print(s.findNumberOfLIS([1, 2, 4, 3, 5, 4, 7, 2]))
+print(s.minimumDeleteSum(
+    "cicsddawqxrotwfehpfzxjukgumtcplecvgumpfitwowmtuhlgcbssisieoqgsfvavvaordkzwxpnppfjurckhyzeugkjowqzvojzigkrehiapcsiwwhvchrzhcsdgqyaovqzgbicnsstcofnmiipqxmjldknkcojlhzdprkqrqzbybexhmcfxhezzbwbfcbvnxrhatlklhadltciubrubudxthujdhtipicnvgangdpqicshcmmoacaonfsssjujzkznmxamgvlmaleovrcqijsdhnr",
+    "zkhkcdscdrgpqjqtksxiztcmymfgttiqntizhfafbvmjbjurxtbtnwilunqfmkkuvtgjzeoiunmqqbqoppejtzafjpbickphuvvmuhzvuxmsoeezvtlgfxjjjuwieobwldmyrfamokmewopvnmoiymfevorwanmicfumifjmrrhreeqkvmqgmwdfcmhxpujcbyfwdwqkbzovzuxzntwksedzzkdnqjpxhsqmffiwtxjedlbcpgfnetafbdxibsbntvqahhtbmbtdcgiedwdjnfbeqnydooasjdvxcyqqojiretcgeeycjrqqlxtuujmvzqrsrazvifeszibswkreosvzaexridrrcwptjavetgiiockenusrwsufnvskeumjiyvmyyadsqdwectoamfvpvcsalqtnpettilatie"))
