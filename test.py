@@ -6,67 +6,56 @@ class ListNode:
 
 
 class Solution:
-    def addTwoNumbers(self, l1, l2):
+    def splitListToParts(self, root, k):
         """
-        :type l1: ListNode
-        :type l2: ListNode
-        :rtype: ListNode
+        :type root: ListNode
+        :type k: int
+        :rtype: List[ListNode]
         """
-        res = ListNode(-1)
-        len_l1 = 0
-        len_l2 = 0
-        t1 = l1
-        t2 = l2
-        while t1:
-            t1 = t1.next
-            len_l1 += 1
-        while t2:
-            t2 = t2.next
-            len_l2 += 1
-        tmp = res
-        if len_l1 > len_l2:
-            tmp.next = l1
-            tmp = tmp.next
-            cnt = len_l1 - len_l2
-            while cnt > 0:
-                tmp = tmp.next
-                cnt -= 1
-            while l2:
-                tmp.val += l2.val
-                tmp = tmp.next
-                l2 = l2.next
-        else:
-            tmp.next = l2
-            tmp = tmp.next
-            cnt = len_l2 - len_l1
-            while cnt > 0:
-                tmp = tmp.next
-                cnt -= 1
-            while l1:
-                tmp.val += l1.val
-                tmp = tmp.next
-                l1 = l1.next
-
-        pre = res
-        curr = res.next
-        while curr:
-            if curr.val >= 10:
-                if pre.val == -1:
-                    tmp = pre.next
-                    pre.next = ListNode(1)
-                    pre.next.next = tmp
-                else:
-                    pre.val += 1
-                curr.val -= 10
-                pre = res
-                curr = res.next
-                continue
-            pre = pre.next
-            curr = curr.next
-        return res.next
+        res = []
+        head = root
+        len_r = 0
+        while head:
+            head = head.next
+            len_r += 1
+        index = 0
+        cnt = 0
+        pre_cnt = len_r // k
+        mod_cnt = len_r % k
+        head = root
+        tmp_head = ListNode(-1)
+        tmp_node = tmp_head
+        while head:
+            if cnt < pre_cnt:
+                tmp_node.next = ListNode(head.val)
+                head = head.next
+                tmp_node = tmp_node.next
+                cnt += 1
+            elif mod_cnt > 0:
+                mod_cnt -= 1
+                tmp_node.next = ListNode(head.val)
+                head = head.next
+                res.append(tmp_head.next)
+                index += 1
+                tmp_head.next = None
+                tmp_node = tmp_head
+                cnt = 0
+            else:
+                res.append(tmp_head.next)
+                index += 1
+                tmp_head.next = None
+                tmp_node = tmp_head
+                cnt = 0
+        if tmp_head.next:
+            res.append(tmp_head.next)
+            index += 1
+        while index < k:
+            res.append(None)
+            index += 1
+        return res
 
 
-v1 = [9, 4, 4, 3]
+v1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 v2 = [5, 6, 4]
 n1 = ListNode(-1)
 n2 = ListNode(-1)
@@ -80,15 +69,17 @@ for i in v2:
     t2 = t2.next
 n = n1
 while n:
-    print(n.val)
+    #print(n.val)
     n = n.next
 n = n2
 while n:
-    print(n.val)
+    #print(n.val)
     n = n.next
 s = Solution()
-n = s.addTwoNumbers(n1.next, n2.next)
+n = s.splitListToParts(n1.next, 12)
 print()
-while n:
-    print(n.val)
-    n = n.next
+for i in n:
+    while i:
+        print(i.val)
+        i = i.next
+    print()
