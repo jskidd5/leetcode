@@ -1,58 +1,60 @@
-# Definition for singly-linked list.
-class ListNode:
-    def __init__(self, x):
-        self.val = x
-        self.next = None
+class MyStack:
 
-
-class Solution:
-    def numComponents(self, head, G):
+    def __init__(self):
         """
-        :type head: ListNode
-        :type G: List[int]
+        Initialize your data structure here.
+        """
+        self.stack = []
+        self.index = 0
+
+    def push(self, x):
+        """
+        Push element x onto stack.
+        :type x: int
+        :rtype: void
+        """
+        if len(self.stack) > self.index:
+            self.stack[self.index] = x
+        else:
+            self.stack.append(x)
+        self.index += 1
+
+    def pop(self):
+        """
+        Removes the element on top of the stack and returns that element.
         :rtype: int
         """
-        res = ListNode(-1)
-        res.next = head
-        pre = head
-        curr = head.next
-        while curr:
-            tmp = curr.next
-            curr.next = res.next
-            res.next = curr
-            pre.next = tmp
-            n = res
-            while n:
-                print(n.val)
-                n = n.next
-            curr = tmp
-            print()
-        return res.next
+        self.index -= 1
+
+    def top(self):
+        """
+        Get the top element.
+        :rtype: int
+        """
+        if self.index > 0:
+            return self.stack[self.index - 1]
+        else:
+            return None
+
+    def empty(self):
+        """
+        Returns whether the stack is empty.
+        :rtype: bool
+        """
+        return self.index == 0
 
 
-v1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-v2 = [5, 6, 4]
-n1 = ListNode(-1)
-n2 = ListNode(-1)
-t1 = n1
-t2 = n2
-for i in v1:
-    t1.next = ListNode(i)
-    t1 = t1.next
-for i in v2:
-    t2.next = ListNode(i)
-    t2 = t2.next
-n = n1
-while n:
-    # print(n.val)
-    n = n.next
-n = n2
-while n:
-    # print(n.val)
-    n = n.next
-s = Solution()
-n = s.numComponents(n1.next, [0, 3, 1,2])
-print()
-while n:
-    print(n.val)
-    n = n.next
+# Your MyStack object will be instantiated and called as such:
+obj = MyStack()
+obj.push(10)
+obj.push(11)
+obj.push(12)
+obj.push(13)
+param_2 = obj.pop()
+param_2 = obj.pop()
+obj.push(13)
+param_3 = obj.top()
+param_4 = obj.empty()
+print(param_2)
+print(param_3)
+print(param_4)
