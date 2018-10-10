@@ -6,52 +6,23 @@ class ListNode:
 
 
 class Solution:
-    def splitListToParts(self, root, k):
+    def numComponents(self, head, G):
         """
-        :type root: ListNode
-        :type k: int
-        :rtype: List[ListNode]
+        :type head: ListNode
+        :type G: List[int]
+        :rtype: int
         """
-        res = []
-        head = root
-        len_r = 0
+        set_g = set(G)
+        res = 0
         while head:
+            if head.val in set_g:
+                if head.next and head.next.val in set_g:
+                    intr = False
+                else:
+                    intr = True
+                if intr:
+                    res += 1
             head = head.next
-            len_r += 1
-        index = 0
-        cnt = 0
-        pre_cnt = len_r // k
-        mod_cnt = len_r % k
-        head = root
-        tmp_head = ListNode(-1)
-        tmp_node = tmp_head
-        while head:
-            if cnt < pre_cnt:
-                tmp_node.next = ListNode(head.val)
-                head = head.next
-                tmp_node = tmp_node.next
-                cnt += 1
-            elif mod_cnt > 0:
-                mod_cnt -= 1
-                tmp_node.next = ListNode(head.val)
-                head = head.next
-                res.append(tmp_head.next)
-                index += 1
-                tmp_head.next = None
-                tmp_node = tmp_head
-                cnt = 0
-            else:
-                res.append(tmp_head.next)
-                index += 1
-                tmp_head.next = None
-                tmp_node = tmp_head
-                cnt = 0
-        if tmp_head.next:
-            res.append(tmp_head.next)
-            index += 1
-        while index < k:
-            res.append(None)
-            index += 1
         return res
 
 
@@ -69,17 +40,12 @@ for i in v2:
     t2 = t2.next
 n = n1
 while n:
-    #print(n.val)
+    # print(n.val)
     n = n.next
 n = n2
 while n:
-    #print(n.val)
+    # print(n.val)
     n = n.next
 s = Solution()
-n = s.splitListToParts(n1.next, 12)
-print()
-for i in n:
-    while i:
-        print(i.val)
-        i = i.next
-    print()
+n = s.numComponents(n1.next, [0, 3, 1,2])
+print(n)
