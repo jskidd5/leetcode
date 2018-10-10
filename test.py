@@ -12,18 +12,22 @@ class Solution:
         :type G: List[int]
         :rtype: int
         """
-        set_g = set(G)
-        res = 0
-        while head:
-            if head.val in set_g:
-                if head.next and head.next.val in set_g:
-                    intr = False
-                else:
-                    intr = True
-                if intr:
-                    res += 1
-            head = head.next
-        return res
+        res = ListNode(-1)
+        res.next = head
+        pre = head
+        curr = head.next
+        while curr:
+            tmp = curr.next
+            curr.next = res.next
+            res.next = curr
+            pre.next = tmp
+            n = res
+            while n:
+                print(n.val)
+                n = n.next
+            curr = tmp
+            print()
+        return res.next
 
 
 v1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -48,4 +52,7 @@ while n:
     n = n.next
 s = Solution()
 n = s.numComponents(n1.next, [0, 3, 1,2])
-print(n)
+print()
+while n:
+    print(n.val)
+    n = n.next
