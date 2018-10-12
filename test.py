@@ -1,25 +1,24 @@
 class Solution:
-    def nextGreaterElement(self, nums1, nums2):
+    def calPoints(self, ops):
         """
-        :type nums1: List[int]
-        :type nums2: List[int]
-        :rtype: List[int]
+        :type ops: List[str]
+        :rtype: int
         """
-        flg = False
-        res = []
-        for i in nums1:
-            index = list.index(nums2, i) + 1
-            while index < len(nums2):
-                if i < nums2[index]:
-                    flg = True
-                    break
-                index += 1
-            if flg:
-                res.append(nums2[index])
+        res = [0]
+        len_ops = len(ops)
+        if len_ops == 0:
+            return 0
+        for i in range(len_ops):
+            if ops[i] == 'C':
+                res.pop()
+            elif ops[i] == 'D':
+                res.append(res[-1] + res[-1])
+            elif ops[i] == '+':
+                res.append(res[-1] + res[-2])
             else:
-                res.append(-1)
-            flg = False
-        return res
+                res.append(int(ops[i]))
+        return sum(res)
+
 
 s = Solution()
-print(s.nextGreaterElement([1, 3, 5, 2, 4], [6, 5, 4, 3, 2, 1, 7]))
+print(s.calPoints(["5", "-2", "4", "C", "D", "9", "+", "+"]))
