@@ -1,24 +1,45 @@
 class Solution:
-    def calPoints(self, ops):
+    def backspaceCompare(self, S, T):
         """
-        :type ops: List[str]
-        :rtype: int
+        :type S: str
+        :type T: str
+        :rtype: bool
         """
-        res = [0]
-        len_ops = len(ops)
-        if len_ops == 0:
-            return 0
-        for i in range(len_ops):
-            if ops[i] == 'C':
-                res.pop()
-            elif ops[i] == 'D':
-                res.append(res[-1] + res[-1])
-            elif ops[i] == '+':
-                res.append(res[-1] + res[-2])
-            else:
-                res.append(int(ops[i]))
-        return sum(res)
+        len_s = len(S)
+        len_t = len(T)
+        s_i = len_s - 1
+        s_cnt = 0
+        t_i = len_t - 1
+        t_cnt = 0
+        while s_i >= 0 or t_i >= 0:
+            while s_i >= 0 and (S[s_i] == '#' or s_cnt > 0):
+                if S[s_i] == '#':
+                    s_cnt += 1
+                    s_i -= 1
+                elif s_cnt > 0:
+                    s_cnt -= 1
+                    s_i -= 1
+            tmp_s = ''
+            if s_i >= 0:
+                tmp_s = S[s_i]
+                s_i -= 1
+            while t_i >= 0 and (T[t_i] == '#' or t_cnt > 0):
+                if T[t_i] == '#':
+                    t_cnt += 1
+                    t_i -= 1
+                elif t_cnt > 0:
+                    t_cnt -= 1
+                    t_i -= 1
+            tmp_t = ''
+            if t_i >= 0:
+                tmp_t = T[t_i]
+                t_i -= 1
+            if tmp_t != tmp_s:
+                return False
+        if s_i != t_i:
+            return False
+        return True
 
 
 s = Solution()
-print(s.calPoints(["5", "-2", "4", "C", "D", "9", "+", "+"]))
+print(s.backspaceCompare("s#v", "v"))
