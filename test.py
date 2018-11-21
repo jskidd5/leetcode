@@ -1,26 +1,25 @@
 class Solution:
-    def find132pattern(self, nums):
+    def nextGreaterElements(self, nums):
         """
         :type nums: List[int]
-        :rtype: bool
+        :rtype: List[int]
         """
-        n = len(nums)
-        if n <= 2:
-            return False
-        two = min(nums) - 1
+        res = [-1] * len(nums)
         stack = []
-        for i in range(n - 1, -1, -1):
-            if nums[i] < two:
-                return True
-            while len(stack) > 0 and nums[i] > stack[-1]:
-                two = stack[-1]
+        # for i in range(2 * len(nums) - 1, -1, -1):
+        #     while len(stack) > 0 and nums[stack[-1]] <= nums[i % len(nums)]:
+        #         stack.pop()
+        #     if len(stack) > 0:
+        #         res[i % len(nums)] = nums[stack[-1]]
+        #     stack.append(i % len(nums))
+        for i in range(2 * len(nums) - 1, -1, -1):
+            while len(stack) > 0 and stack[-1] <= nums[i % len(nums)]:
                 stack.pop()
-                print(stack)
-            if len(stack) == 0 or stack[-1] > nums[i]:
-                stack.append(nums[i])
-            print(stack, two)
-        return False
+            if len(stack) > 0:
+                res[i % len(nums)] = stack[-1]
+            stack.append(nums[i % len(nums)])
+        return res
 
 
 s = Solution()
-print(s.find132pattern([4, 7, 2, 3, 6]))
+print(s.nextGreaterElements([4, 7, 2, 3, 6]))
