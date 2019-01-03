@@ -1,35 +1,27 @@
 class Solution:
-    def asteroidCollision(self, asteroids):
+    def decodeAtIndex(self, S, K):
         """
-        :type asteroids: List[int]
-        :rtype: List[int]
+        :type S: str
+        :type K: int
+        :rtype: str
         """
-        res = []
-        stack = []
-        impact = False
-        distroy = False
-        for a in asteroids:
-            while len(stack) > 0 and impact:
-                if stack[-1] < 0:
-                    impact = False
-                elif a < 0:
-                    if stack[-1] + a > 0:
-                        distroy = True
-                        impact = False
-                    elif stack[-1] + a < 0:
-                        stack.pop()
-                    else:
-                        stack.pop()
-                        distroy = True
-                        impact = False
-                elif a > 0:
-                    impact = False
-            if not distroy:
-                stack.append(a)
-            impact = True
-            distroy = False
-        return stack
+
+        size = 0
+        for s in S:
+            if s.isdigit():
+                size = size * int(s)
+            else:
+                size += 1
+        for s in reversed(S):
+            K = K % size
+            if s.isalpha() and 0 == K:
+                return s
+            if s.isdigit():
+                size = size / int(s)
+            else:
+                size -= 1
+        return K
 
 
 s = Solution()
-print(s.asteroidCollision([10, 2, -5]))
+print(s.decodeAtIndex("a2345678999999999999999",1))
