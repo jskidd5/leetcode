@@ -1,28 +1,30 @@
 class Solution:
-
-    def carFleet(self, target, position, speed):
+    def exclusiveTime(self, n, logs):
         """
-        :type target: int
-        :type position: List[int]
-        :type speed: List[int]
-        :rtype: int
+        :type n: int
+        :type logs: List[str]
+        :rtype: List[int]
         """
-        speed_stack = []
-        map_car = []
-        car_cnt = len(position)
-        if car_cnt == 0:
-            return 0
-        for i in range(car_cnt):
-            map_car.append([position[i], speed[i]])
-        map_car.sort(reverse=True)
-        speed_stack.append([map_car[0][1], (target - map_car[0][0]) / map_car[0][1]])
-        for i in range(1, car_cnt):
-            if map_car[i][1] > speed_stack[-1][0] and speed_stack[-1][1] * map_car[i][1] + map_car[i][0] >= target:
-                pass
-            else:
-                speed_stack.append([map_car[i][1], (target - map_car[i][0]) / map_car[i][1]])
-        return len(speed_stack)
+        stack = []
+        times = []
+        last = 0
+        res = n * [0]
+        for log in logs:
+            tmp = log.split(':')
+            if tmp[1] == 'start':
+                stack.append([int(tmp[0]), int(tmp[2])])
+                times.append(0)
+            elif tmp[1] == 'end':
+                dec_time = 0
+                all_tmp_time = int(tmp[2]) - stack.pop()[1] + 1
+                while times and times[-1] != 0:
+                    dec_time += times.pop()
+                res[int(tmp[0])] += all_tmp_time - dec_time
+                times.pop()
+                times.append(all_tmp_time)
+            # print(stack, '-----', times, '====', res)
+        return res
 
 
 s = Solution()
-print(s.carFleet(12, [10, 8, 0, 5, 3], [2, 4, 1, 1, 3]))
+print(s.exclusiveTime(2,["0:start:0","0:start:2","0:end:5","1:start:6","1:end:6","0:end:7"]))
