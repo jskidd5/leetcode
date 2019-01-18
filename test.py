@@ -1,28 +1,22 @@
 class Solution:
-    def dailyTemperatures(self, T):
+    def evalRPN(self, tokens):
         """
-        :type T: List[int]
-        :rtype: List[int]
+        :type tokens: List[str]
+        :rtype: int
         """
         stack = []
-        res = []
-        for t in reversed(T):
-            if len(stack) == 0:
-                stack.append([t, 1])
-                res.append(0)
-            else:
-                cnt = 1
-                while stack and stack[-1][0] <= t:
-                    cnt += stack.pop()[1]
-                if len(stack) > 0:
-                    res.append(cnt)
-                else:
-                    res.append(0)
-                stack.append([t, cnt])
-            print(stack)
-        res.reverse()
-        return res
-
+        for t in reversed(tokens):
+            try:
+                stack.append(int(t))
+            except ValueError:
+                stack.append(t)
+            while len(stack) >= 3 and isinstance(stack[-1], int) and isinstance(stack[-2], int) and isinstance(stack[-3], str):
+                tmp = int(eval(str(stack[-1]) + stack[-3] + str(stack[-2])))
+                stack.pop()
+                stack.pop()
+                stack.pop()
+                stack.append(tmp)
+        return stack[-1]
 
 s = Solution()
-print(s.dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))
+print(s.evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]))
