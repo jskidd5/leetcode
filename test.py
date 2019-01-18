@@ -1,24 +1,28 @@
 class Solution:
-    def scoreOfParentheses(self, S):
+    def dailyTemperatures(self, T):
         """
-        :type S: str
-        :rtype: int
+        :type T: List[int]
+        :rtype: List[int]
         """
         stack = []
-        for s in S:
-            if s == '(':
-                stack.append(-1)
-            elif s == ')':
-                tmp = 0
-                while stack and stack[-1] != -1:
-                    tmp += stack.pop()
-                stack.pop()
-                if tmp:
-                    stack.append(2 * tmp)
+        res = []
+        for t in reversed(T):
+            if len(stack) == 0:
+                stack.append([t, 1])
+                res.append(0)
+            else:
+                cnt = 1
+                while stack and stack[-1][0] <= t:
+                    cnt += stack.pop()[1]
+                if len(stack) > 0:
+                    res.append(cnt)
                 else:
-                    stack.append(1)
-        return sum(stack)
+                    res.append(0)
+                stack.append([t, cnt])
+            print(stack)
+        res.reverse()
+        return res
 
 
 s = Solution()
-print(s.scoreOfParentheses('()()'))
+print(s.dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]))
