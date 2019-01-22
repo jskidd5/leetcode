@@ -1,22 +1,44 @@
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
 class Solution:
-    def evalRPN(self, tokens):
+    def isSameTree(self, p, q):
         """
-        :type tokens: List[str]
-        :rtype: int
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: bool
         """
-        stack = []
-        for t in reversed(tokens):
-            try:
-                stack.append(int(t))
-            except ValueError:
-                stack.append(t)
-            while len(stack) >= 3 and isinstance(stack[-1], int) and isinstance(stack[-2], int) and isinstance(stack[-3], str):
-                tmp = int(eval(str(stack[-1]) + stack[-3] + str(stack[-2])))
-                stack.pop()
-                stack.pop()
-                stack.pop()
-                stack.append(tmp)
-        return stack[-1]
+        res = True
+        stack = [[p, q]]
+        print(stack)
+        while stack:
+            root = stack.pop()
+            if root[0] and root[1]:
+                print(root[0].val)
+                if root[0].val != root[1].val:
+                    return False
+                else:
+                    stack.append([root[0].right, root[1].right])
+                    stack.append([root[0].left, root[1].left])
+            elif root[0] or root[1]:
+                return False
+        return res
+
+
+p = TreeNode(1)
+p.left = TreeNode(2)
+p.left.right = TreeNode(3)
+p.left.right.left = TreeNode(4)
+p.right = TreeNode(5)
+p.right.right = TreeNode(6)
+p.right.right.left = TreeNode(7)
+p.right.right.left.left = TreeNode(8)
+p.right.right.left.right = TreeNode(9)
 
 s = Solution()
-print(s.evalRPN(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]))
+print(s.isSameTree(p, p))
