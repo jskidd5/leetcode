@@ -7,39 +7,22 @@ class TreeNode:
 
 
 class Solution:
-    def lowestCommonAncestor(self, root, p, q):
+    def sumOfLeftLeaves(self, root):
         """
         :type root: TreeNode
-        :type p: TreeNode
-        :type q: TreeNode
-        :rtype: TreeNode
+        :rtype: int
         """
-        stack_p = [root]
-        stack_q = [root]
-        tmp = root
-        while tmp and p.val != tmp.val:
-            if tmp and tmp.val > p.val:
-                tmp = tmp.left
-                stack_p.append(tmp)
-            elif tmp and tmp.val < p.val:
-                tmp = tmp.right
-                stack_p.append(tmp)
-        tmp = root
-        while tmp and q.val != tmp.val:
-            if tmp and tmp.val > q.val:
-                tmp = tmp.left
-                stack_q.append(tmp)
-            elif tmp and tmp.val < q.val:
-                tmp = tmp.right
-                stack_q.append(tmp)
-        while len(stack_p) > len(stack_q):
-            stack_p.pop()
-        while len(stack_p) < len(stack_q):
-            stack_q.pop()
-        while stack_p[-1].val != stack_q[-1].val:
-            stack_p.pop()
-            stack_q.pop()
-        return stack_p[-1]
+        res = 0
+        stack = [root]
+        while len(stack) > 0:
+            tmp = stack.pop()
+            if tmp and tmp.left:
+                stack.append(tmp.left)
+                if tmp.left.left is None and tmp.left.right is None:
+                    res += tmp.left.val
+            if tmp and tmp.right:
+                stack.append(tmp.right)
+        return res
 
 
 p = TreeNode(6)
@@ -55,5 +38,5 @@ p.right.right = TreeNode(9)
 # p.right.right.left.right = TreeNode(9)
 
 s = Solution()
-res = s.lowestCommonAncestor(p, TreeNode(2), TreeNode(4))
-print(res.val)
+res = s.sumOfLeftLeaves(p)
+print(res)
