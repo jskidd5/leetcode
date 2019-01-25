@@ -7,60 +7,58 @@ class TreeNode:
 
 
 class Solution:
-    def pathSum(self, root, sum):
+    def findMode(self, root):
         """
         :type root: TreeNode
-        :type sum: int
-        :rtype: int
+        :rtype: List[int]
         """
-        stack = [root]
-        res = 0
-        while stack:
-            tmp = stack.pop()
-            res += self.path_val(tmp, sum)
-            if tmp and tmp.left:
-                stack.append(tmp.left)
-            if tmp and tmp.right:
-                stack.append(tmp.right)
+        self.max_cnt = 0
+        res, flg = self.get_val(root, [], 0)
+        if self.max_cnt > flg:
+            res.pop()
+        elif self.max_cnt < flg:
+            res = [res[-1]]
+            self.max_cnt = flg
         return res
 
-    def path_val(self, root, sum):
+    def get_val(self, root, res, flg):
         if root is None:
-            return 0
-        cnt = 0
-        val = 0
-        high = 0
-        nums = []
-        stack = [[root, high + 1, nums]]
-        while stack:
-            tmp = stack.pop()
-            while high >= tmp[1]:
-                val -= tmp[2].pop()
-                high -= 1
-            tmp[2].append(tmp[0].val)
-            val += tmp[0].val
-            if val == sum:
-                cnt += 1
-            if tmp[0].right:
-                stack.append([tmp[0].right, tmp[1] + 1, tmp[2]])
-            if tmp[0].left:
-                stack.append([tmp[0].left, tmp[1] + 1, tmp[2]])
-            high += 1
-        return cnt
+            return res, flg
+        if root.left:
+            res, flg = self.get_val(root.left, res, flg)
+        if res:
+            if root.val not in res:
+                if self.max_cnt > flg:
+                    res.pop()
+                elif self.max_cnt < flg:
+                    res = [res[-1]]
+                    self.max_cnt = flg
+                res.append(root.val)
+                flg = 1
+            else:
+                flg += 1
+        else:
+            res.append(root.val)
+            flg = 1
+        if root.right:
+            res, flg = self.get_val(root.right, res, flg)
+        return res, flg
 
 
-p = TreeNode(6)
-p.left = TreeNode(2)
-p.left.left = TreeNode(0)
-p.left.right = TreeNode(4)
-p.left.right.left = TreeNode(3)
-p.left.right.right = TreeNode(5)
-p.right = TreeNode(8)
-p.right.left = TreeNode(7)
-p.right.left.left = TreeNode(-4)
-p.right.right = TreeNode(9)
-p.right.right.left = TreeNode(2)
+# p = TreeNode(6)
+# p.left = TreeNode(2)
+# p.left.left = TreeNode(2)
+# p.left.right = TreeNode(4)
+# p.left.right.left = TreeNode(3)
+# p.left.right.right = TreeNode(5)
+# p.right = TreeNode(8)
+# p.right.left = TreeNode(8)
+# p.right.right = TreeNode(9)
+
+p = TreeNode(1)
+p.right = TreeNode(2)
+p.right.left = TreeNode(2)
+
 s = Solution()
-res = s.pathSum(p, 11)
-res = s.pathSum(p, 11)
+res = s.findMode(p)
 print(res)
