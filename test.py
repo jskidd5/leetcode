@@ -7,58 +7,64 @@ class TreeNode:
 
 
 class Solution:
-    def findMode(self, root):
+    def convertBST(self, root):
         """
         :type root: TreeNode
-        :rtype: List[int]
+        :rtype: TreeNode
         """
-        self.max_cnt = 0
-        res, flg = self.get_val(root, [], 0)
-        if self.max_cnt > flg:
-            res.pop()
-        elif self.max_cnt < flg:
-            res = [res[-1]]
-            self.max_cnt = flg
-        return res
-
-    def get_val(self, root, res, flg):
-        if root is None:
-            return res, flg
-        if root.left:
-            res, flg = self.get_val(root.left, res, flg)
-        if res:
-            if root.val not in res:
-                if self.max_cnt > flg:
-                    res.pop()
-                elif self.max_cnt < flg:
-                    res = [res[-1]]
-                    self.max_cnt = flg
-                res.append(root.val)
-                flg = 1
+        p = root
+        stack = []
+        vals = []
+        while p or stack:
+            if p:
+                stack.append(p)
+                p = p.left
             else:
-                flg += 1
-        else:
-            res.append(root.val)
-            flg = 1
-        if root.right:
-            res, flg = self.get_val(root.right, res, flg)
-        return res, flg
+                tmp = stack.pop()
+                if tmp.val not in vals:
+                    vals.append(tmp.val)
+                p = tmp.right
+        print(vals)
+        p = root
+        stack = []
+        while p or stack:
+            if p:
+                stack.append(p)
+                p = p.left
+            else:
+                tmp = stack.pop()
+                start = vals.index(tmp.val)
+                tmp.val = sum(vals[start:])
+                p = tmp.right
+        p = root
+        stack = []
+        vals = []
+        while p or stack:
+            if p:
+                stack.append(p)
+                p = p.left
+            else:
+                tmp = stack.pop()
+                vals.append(tmp.val)
+                p = tmp.right
+        return vals
 
 
-# p = TreeNode(6)
+
+p = TreeNode(6)
+p.left = TreeNode(2)
+p.left.left = TreeNode(2)
+p.left.right = TreeNode(4)
+p.left.right.left = TreeNode(3)
+p.left.right.right = TreeNode(5)
+p.right = TreeNode(8)
+p.right.left = TreeNode(8)
+p.right.right = TreeNode(9)
+
+# p = TreeNode(5)
 # p.left = TreeNode(2)
-# p.left.left = TreeNode(2)
-# p.left.right = TreeNode(4)
-# p.left.right.left = TreeNode(3)
-# p.left.right.right = TreeNode(5)
-# p.right = TreeNode(8)
-# p.right.left = TreeNode(8)
-# p.right.right = TreeNode(9)
-
-p = TreeNode(1)
-p.right = TreeNode(2)
-p.right.left = TreeNode(2)
+# p.right = TreeNode(13)
 
 s = Solution()
-res = s.findMode(p)
+res = s.convertBST(p)
 print(res)
