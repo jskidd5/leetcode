@@ -7,43 +7,52 @@ class TreeNode:
 
 
 class Solution:
-    def findTilt(self, root):
+    def diameterOfBinaryTree(self, root):
         """
         :type root: TreeNode
         :rtype: int
         """
         stack = [[root, -1]]
-        left_stack = []
-        right_stack = []
-        res = 0
         pre = root
-        while len(stack) > 0:
-            while (len(stack) > 0 and (stack[-1][0].right is None and stack[-1][0].left is None) or
-                   (len(stack) > 0 and (stack[-1][0].left == pre or stack[-1][0].right == pre))):
-                if stack[-1][0].right is None and stack[-1][0].left is None:
-                    if stack[-1][1] == 1:
-                        left_stack.append(stack[-1][0].val)
-                    elif stack[-1][1] == 0:
-                        right_stack.append(stack[-1][0].val)
-                else:
+        left_len = []
+        right_len = []
+        res = 0
+        if root is None:
+            return 0
+        while stack:
+            curr = stack[-1][0]
+            dir = stack[-1][1]
+            if stack and ((curr.left is None and curr.right is None) or
+                          (curr.left == pre or curr.right == pre)):
+                stack.pop()
+                if curr.left is None and curr.right is None:
+                    if dir:
+                        left_len.append(1)
+                    else:
+                        right_len.append(1)
+                if curr.left == pre or curr.right == pre:
                     tmp_l = 0
                     tmp_r = 0
-                    if stack[-1][0].left:
-                        tmp_l = left_stack.pop()
-                    if stack[-1][0].right:
-                        tmp_r = right_stack.pop()
-                    res += abs(tmp_l - tmp_r)
-                    if stack[-1][1] == 1:
-                        left_stack.append(stack[-1][0].val + tmp_l + tmp_r)
-                    elif stack[-1][1] == 0:
-                        right_stack.append(stack[-1][0].val + tmp_l + tmp_r)
-                pre = stack.pop()[0]
-            if len(stack) > 0:
-                tmp = stack[-1][0]
-                if tmp.right:
-                    stack.append([tmp.right, 0])
-                if tmp.left:
-                    stack.append([tmp.left, 1])
+                    if curr.left:
+                        tmp_l = left_len.pop()
+                    if curr.right:
+                        tmp_r = right_len.pop()
+                    if tmp_l > tmp_r:
+                        tmp = tmp_l
+                    else:
+                        tmp = tmp_r
+                    if dir:
+                        left_len.append(tmp + 1)
+                    else:
+                        right_len.append(tmp + 1)
+                    if res < tmp_l + tmp_r:
+                        res = tmp_l + tmp_r
+                pre = curr
+            else:
+                if curr.right:
+                    stack.append([curr.right, 0])
+                if curr.left:
+                    stack.append([curr.left, 1])
         return res
 
 
@@ -62,5 +71,5 @@ p.right.right = TreeNode(9)
 # p.right = TreeNode(13)
 
 s = Solution()
-res = s.findTilt(p)
+res = s.diameterOfBinaryTree(p)
 print(res)
