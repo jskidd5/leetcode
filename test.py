@@ -7,11 +7,7 @@ class TreeNode:
 
 
 class Solution:
-    def diameterOfBinaryTree(self, root):
-        """
-        :type root: TreeNode
-        :rtype: int
-        """
+    def diameterOfBinaryTree(self, root: 'TreeNode') -> 'int':
         stack = [[root, -1]]
         pre = root
         left_len = []
