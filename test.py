@@ -7,30 +7,31 @@ class TreeNode:
 
 
 class Solution:
-    def mergeTrees(self, t1: 'TreeNode', t2: 'TreeNode') -> 'TreeNode':
-        if t1 is None and t2 is None:
-            return None
-        if t1 is None:
-            t1 = TreeNode(0)
-        if t2 is None:
-            t2 = TreeNode(0)
-        stack = [[t1, t2]]
+    def averageOfLevels(self, root: 'TreeNode') -> 'List[float]':
+        stack = [[root, 0]]
+        map_res = {}
+        res = []
+        if root is None:
+            return res
+        curr = stack[-1][0].left
         while len(stack) > 0:
-            tmp = stack.pop()
-            tmp[0].val += tmp[1].val
-            if tmp[0].right or tmp[1].right:
-                if tmp[0].right is None:
-                    tmp[0].right = TreeNode(0)
-                if tmp[1].right is None:
-                    tmp[1].right = TreeNode(0)
-                stack.append([tmp[0].right, tmp[1].right])
-            if tmp[0].left or tmp[1].left:
-                if tmp[0].left is None:
-                    tmp[0].left = TreeNode(0)
-                if tmp[1].left is None:
-                    tmp[1].left = TreeNode(0)
-                stack.append([tmp[0].left, tmp[1].left])
-        return t1
+            if curr and stack[-1][0].left:
+                stack.append([stack[-1][0].left, stack[-1][1] + 1])
+            else:
+                tmp = stack.pop()
+                print(tmp[0].val, tmp[1])
+                if tmp[1] in map_res:
+                    map_res[tmp[1]][0] += tmp[0].val
+                    map_res[tmp[1]][1] += 1
+                else:
+                    map_res[tmp[1]] = [tmp[0].val, 1]
+                if tmp[0].right:
+                    stack.append([tmp[0].right, tmp[1] + 1])
+                curr = tmp[0].right
+        res = len(map_res) * [0]
+        for i in map_res:
+            res[i] = map_res[i][0] / map_res[i][1]
+        return res
 
 
 p = TreeNode(6)
@@ -49,5 +50,5 @@ t.left.right = TreeNode(3)
 t.left.left = TreeNode(4)
 t.left.left.left = TreeNode(1)
 s = Solution()
-res = s.mergeTrees(p, t)
+res = s.averageOfLevels(p)
 print(res)
