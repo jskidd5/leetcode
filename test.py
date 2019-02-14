@@ -7,45 +7,30 @@ class TreeNode:
 
 
 class Solution:
-    def tree2str(self, t):
-        """
-        :type t: TreeNode
-        :rtype: str
-        """
-        if t is None:
-            return ''
-        res = str(t.val)
-        stack = [[t, 0]]
-        last_h = -1
-        pair = 0
-        while t and len(stack) > 0:
+    def mergeTrees(self, t1: 'TreeNode', t2: 'TreeNode') -> 'TreeNode':
+        if t1 is None and t2 is None:
+            return None
+        if t1 is None:
+            t1 = TreeNode(0)
+        if t2 is None:
+            t2 = TreeNode(0)
+        stack = [[t1, t2]]
+        while len(stack) > 0:
             tmp = stack.pop()
-            if last_h > tmp[1]:
-                cnt = last_h - tmp[1]
-                while pair and cnt:
-                    res += ')'
-                    pair -= 1
-                    cnt -= 1
-            if tmp[1] > 0:
-                res += '(' + str(tmp[0].val)
-                pair += 1
-            if tmp[0].right is None and tmp[0].left is None:
-                res += ')'
-                pair -= 1
-            elif tmp[0].left is None:
-                res += '()'
-            last_h = tmp[1]
-            if tmp[0].right:
-                stack.append([tmp[0].right, tmp[1] + 1])
-            if tmp[0].left:
-                stack.append([tmp[0].left, tmp[1] + 1])
-        if pair > 0:
-            while pair:
-                res += ')'
-                pair -= 1
-        else:
-            res = res[0:len(res) + pair]
-        return res
+            tmp[0].val += tmp[1].val
+            if tmp[0].right or tmp[1].right:
+                if tmp[0].right is None:
+                    tmp[0].right = TreeNode(0)
+                if tmp[1].right is None:
+                    tmp[1].right = TreeNode(0)
+                stack.append([tmp[0].right, tmp[1].right])
+            if tmp[0].left or tmp[1].left:
+                if tmp[0].left is None:
+                    tmp[0].left = TreeNode(0)
+                if tmp[1].left is None:
+                    tmp[1].left = TreeNode(0)
+                stack.append([tmp[0].left, tmp[1].left])
+        return t1
 
 
 p = TreeNode(6)
@@ -64,5 +49,5 @@ t.left.right = TreeNode(3)
 t.left.left = TreeNode(4)
 t.left.left.left = TreeNode(1)
 s = Solution()
-res = s.tree2str(t)
+res = s.mergeTrees(p, t)
 print(res)
