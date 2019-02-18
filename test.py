@@ -6,37 +6,23 @@ class TreeNode:
 
 
 class Solution:
-    def trimBST(self, root: 'TreeNode', L: 'int', R: 'int') -> 'TreeNode':
+    def findSecondMinimumValue(self, root: 'TreeNode') -> 'int':
         if root is None:
             return None
-        pre_root = TreeNode(0)
-        stack = [[root, pre_root]]
+        stack = [root]
+        res = -1
+        set_res = set()
         while len(stack) > 0:
-            curr, parent = stack.pop()
-            if curr.val < L:
-                if curr.right:
-                    parent.left = curr.right
-                    stack.append([curr.right, parent])
-                else:
-                    parent.left = None
-            elif curr.val > R:
-                if curr.left:
-                    parent.right = curr.left
-                    stack.append([curr.left, parent])
-                else:
-                    parent.right = None
-            else:
-                print(curr.val)
-                if curr.right:
-                    stack.append([curr.right, curr])
-                if curr.left:
-                    stack.append([curr.left, curr])
-        if pre_root.left and L <= pre_root.left.val <= R:
-            return pre_root.left
-        elif pre_root.right:
-            return pre_root.right
-        else:
-            return root
+            tmp = stack.pop()
+            set_res.add(tmp.val)
+            if tmp.right:
+                stack.append(tmp.right)
+            if tmp.left:
+                stack.append(tmp.left)
+        if len(set_res) > 1:
+            set_res = sorted(set_res)
+            res = set_res[1]
+        return res
 
 
 def stringToTreeNode(input):
@@ -94,13 +80,11 @@ def treeNodeToString(root):
 
 
 def main():
-    root = stringToTreeNode('[2,0,33,null,1,25,40,null,null,11,31,34,45,10,18,29,32,null,36,43,46,4,null,12,24,26,30,null,null,35,39,42,44,null,48,3,9,null,14,22,null,null,27,null,null,null,null,38,null,41,null,null,null,47,49,null,null,5,null,13,15,21,23,null,28,37,null,null,null,null,null,null,null,null,8,null,null,null,17,19,null,null,null,null,null,null,null,7,null,16,null,null,20,6]')
-    L = 25
-    R = 26
+    root = stringToTreeNode('[1,1,2,1,1,2,2]')
 
-    ret = Solution().trimBST(root, L, R)
+    ret = Solution().findSecondMinimumValue(root)
 
-    out = treeNodeToString(ret)
+    out = (ret)
     print(out)
 
 
