@@ -6,17 +6,19 @@ class TreeNode:
 
 
 class Solution:
-    def searchBST(self, root: 'TreeNode', val: 'int') -> 'TreeNode':
+    def isUnivalTree(self, root: TreeNode) -> bool:
         if root is None:
             return None
-        while root:
-            if val < root.val:
-                root = root.left
-            elif val > root.val:
-                root = root.right
-            elif val == root.val:
-                return root
-        return None
+        set_tree = set()
+        stack = [root]
+        while len(stack) > 0:
+            curr = stack.pop()
+            set_tree.add(curr.val)
+            if curr.right:
+                stack.append(curr.right)
+            if curr.left:
+                stack.append(curr.left)
+        return len(set_tree) == 1
 
 
 def stringToTreeNode(input):
@@ -74,11 +76,12 @@ def treeNodeToString(root):
 
 
 def main():
-    root = stringToTreeNode('[4,2,7,1,3,null,null,1]')
+    root = stringToTreeNode('[1,1,1]')
 
-    ret = Solution().searchBST(root, 2)
+    ret = Solution().isUnivalTree(root)
 
-    out = treeNodeToString(ret)
+    # out = treeNodeToString(ret)
+    out = ret
     print(out)
 
 
