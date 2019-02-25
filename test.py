@@ -6,27 +6,30 @@ class TreeNode:
 
 
 class Solution:
-    def isCousins(self, root: TreeNode, x: int, y: int) -> bool:
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        res = []
         if root is None:
-            return False
-        node_x = None
-        node_y = None
-        stack = [[root, None, 0]]
-        if root.right:
-            stack.append([root.right, root, 1])
-        if root.left:
-            stack.append([root.left, root, 1])
+            return res
+        stack = [root]
+        curr = root
         while len(stack) > 0:
-            curr = stack.pop()
-            if curr[0].val == x:
-                node_x = curr
-            if curr[0].val == y:
-                node_y = curr
-            if curr[0].right:
-                stack.append([curr[0].right, curr[0], curr[2] + 1])
-            if curr[0].left:
-                stack.append([curr[0].left, curr[0], curr[2] + 1])
-        return node_x[1] != node_y[1] and node_x[2] == node_y[2]
+            if curr and curr.left:
+                stack.append(curr.left)
+                curr = curr.left
+            else:
+                tmp = stack.pop()
+                res.append(tmp.val)
+                curr = tmp.right
+                if tmp.right:
+                    stack.append(tmp.right)
+        return res
+
+
+
 
 
 def stringToTreeNode(input):
@@ -86,10 +89,11 @@ def treeNodeToString(root):
 def main():
     root = stringToTreeNode('[1,2,3,null,4,null,5]')
 
-    ret = Solution().isCousins(root, 5, 4)
+    ret = Solution().inorderTraversal(root)
 
-    # out = treeNodeToString(ret)
     out = ret
+    #out = treeNodeToString(ret)
+
     print(out)
 
 
