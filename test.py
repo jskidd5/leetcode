@@ -6,19 +6,27 @@ class TreeNode:
 
 
 class Solution:
-    def isUnivalTree(self, root: TreeNode) -> bool:
+    def isCousins(self, root: TreeNode, x: int, y: int) -> bool:
         if root is None:
-            return None
-        set_tree = set()
-        stack = [root]
+            return False
+        node_x = None
+        node_y = None
+        stack = [[root, None, 0]]
+        if root.right:
+            stack.append([root.right, root, 1])
+        if root.left:
+            stack.append([root.left, root, 1])
         while len(stack) > 0:
             curr = stack.pop()
-            set_tree.add(curr.val)
-            if curr.right:
-                stack.append(curr.right)
-            if curr.left:
-                stack.append(curr.left)
-        return len(set_tree) == 1
+            if curr[0].val == x:
+                node_x = curr
+            if curr[0].val == y:
+                node_y = curr
+            if curr[0].right:
+                stack.append([curr[0].right, curr[0], curr[2] + 1])
+            if curr[0].left:
+                stack.append([curr[0].left, curr[0], curr[2] + 1])
+        return node_x[1] != node_y[1] and node_x[2] == node_y[2]
 
 
 def stringToTreeNode(input):
@@ -76,9 +84,9 @@ def treeNodeToString(root):
 
 
 def main():
-    root = stringToTreeNode('[1,1,1]')
+    root = stringToTreeNode('[1,2,3,null,4,null,5]')
 
-    ret = Solution().isUnivalTree(root)
+    ret = Solution().isCousins(root, 5, 4)
 
     # out = treeNodeToString(ret)
     out = ret
