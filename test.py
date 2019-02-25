@@ -6,23 +6,17 @@ class TreeNode:
 
 
 class Solution:
-    def findSecondMinimumValue(self, root: 'TreeNode') -> 'int':
+    def searchBST(self, root: 'TreeNode', val: 'int') -> 'TreeNode':
         if root is None:
             return None
-        stack = [root]
-        res = -1
-        set_res = set()
-        while len(stack) > 0:
-            tmp = stack.pop()
-            set_res.add(tmp.val)
-            if tmp.right:
-                stack.append(tmp.right)
-            if tmp.left:
-                stack.append(tmp.left)
-        if len(set_res) > 1:
-            set_res = sorted(set_res)
-            res = set_res[1]
-        return res
+        while root:
+            if val < root.val:
+                root = root.left
+            elif val > root.val:
+                root = root.right
+            elif val == root.val:
+                return root
+        return None
 
 
 def stringToTreeNode(input):
@@ -80,11 +74,11 @@ def treeNodeToString(root):
 
 
 def main():
-    root = stringToTreeNode('[1,1,2,1,1,2,2]')
+    root = stringToTreeNode('[4,2,7,1,3,null,null,1]')
 
-    ret = Solution().findSecondMinimumValue(root)
+    ret = Solution().searchBST(root, 2)
 
-    out = (ret)
+    out = treeNodeToString(ret)
     print(out)
 
 
